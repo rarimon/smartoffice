@@ -4,16 +4,15 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+
+
+
+
+
+
+
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,6 +39,10 @@ Route::get('/update/category/{category_id}', [CategoryController::class, 'update
 Route::post('/edit/category', [CategoryController::class, 'edit_category']);
 
 Route::get('/subcategory', [CategoryController::class, 'subcategory_page']);
+Route::post('/insert/subcategory', [CategoryController::class, 'subcategory_insert']);
+Route::get('/subcategory/delete/{subcategory_id}', [CategoryController::class, 'delete_subcategory']);
+Route::get('/update/subcategory/{subcategory_id}', [CategoryController::class, 'update_subcategory']);
+Route::post('/edit/subcategory', [CategoryController::class, 'edit_subcategory']);
 
 
 

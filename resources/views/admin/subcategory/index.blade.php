@@ -22,37 +22,41 @@ Smart-Office|Subcategory
                         <tr>
                             <th>No</th>
                             <th>Category Name</th>
+                            <th>Subcategory Name</th>
                             <th>Added By</th>
                             <th>Creat Time</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    {{--<tbody>
-                        @foreach($category_info as $index=> $category)
+                    <tbody>
+                        @foreach($subcategory_info as $index=> $subcategory)
                         <tr>
-                            <td>{{$category_info->FirstItem()+$index}}</td>
-                    <td>{{$category->category_name}}</td>
-                    <td>{{App\Models\User::find($category->added_by)->name}}</td>
-                    <td>{{$category->created_at->diffForHumans()}}</td>
-                    <td>
-                        <div class="template-demo">
 
-                            <a href="{{url('/update/category')}}/{{$category->id}}" class="btn btn-outline-secondary btn-icon-text"> Edit
-                            </a>
-                            <a href="{{url('/category/delete')}}/{{$category->id}}" class="btn btn-outline-danger btn-icon-text">
-                                Delete</a>
+                            <td>{{$subcategory_info->FirstItem()+$index}}</td>
+                            {{--<td>{{App\Models\Category::find($subcategory->category_id)->category_name}}</td>--}}
+                            <td>{{$subcategory->subcategory_name}}</td>
+                            <td>{{App\Models\User::find($subcategory->added_by)->name}}</td>
+                            <td>{{$subcategory->created_at->diffForHumans()}}</td>
+                            <td>
+                                <div class="template-demo">
 
-                        </div>
+                                    <a href="{{url('/update/subcategory')}}/{{$subcategory->id}}" class="btn btn-outline-secondary btn-icon-text"> Edit
+                                    </a>
+                                    <a href="{{url('/category/delete')}}/{{$subcategory->id}}" class="btn btn-outline-danger btn-icon-text">
+                                        Delete</a>
 
-                    </td>
-                    </tr>
+                                </div>
 
-                    @endforeach
+                            </td>
+                        </tr>
+
+                        @endforeach
 
 
 
-                    </tbody>--}}
+                    </tbody>
                 </table>
+                {{$subcategory_info->links()}}
 
 
 
@@ -69,8 +73,25 @@ Smart-Office|Subcategory
 
             <h4 class="card-title text-center">Subcategory Add</h4>
 
-            <form class="forms-sample " method="POST" action="{{url('/insert/category')}}">
+            <form class="forms-sample " method="POST" action="{{url('/insert/subcategory')}}">
                 @csrf
+                <div class="form-group ">
+                    <label for="exampleInputName1">Category Name <code>*</code></label>
+                    <select name="category_id" class="form-control text-light">
+                        <option value="">Select Category</option>
+                        @foreach( $category_info as $category)
+                        <option value="{{$category->id}}">{{$category->category_name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group ">
+                    @error('category_id')
+                    <div class="alert alert-danger">
+                        {{$message}}
+                    </div>
+                    @enderror
+                </div>
+
                 <div class="form-group ">
                     <label for="exampleInputName1">Subcategory Name <code>*</code></label>
                     <input type="text" name="subcategory_name" class="form-control text-light" id="exampleInputName1" placeholder="Name">

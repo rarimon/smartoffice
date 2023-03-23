@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Subcategory;
 use Auth;
 use Carbon\Carbon;
 
@@ -79,13 +80,64 @@ class CategoryController extends Controller
         return redirect('/category')->with('update', 'Cateogry Delete Successfull !');
     }
 
-
-
     //subcategory page
-
     public function subcategory_page()
     {
+        $category_info = Category::all();
+        $subcategory_info = Subcategory::latest()->paginate(5);
+        return view('admin.subcategory.index', [
+            'category_info' => $category_info,
+            'subcategory_info' => $subcategory_info,
+        ]);
+    }
 
-        return view('admin.subcategory.index');
+    //insert subcategory
+    public function subcategory_insert(Request $request)
+    {
+        $request->validate([
+
+            'subcategory_name' => 'required|unique:subcategories',
+            'category_id' => 'required',
+        ]);
+
+
+        Subcategory::insert([
+            'category_id' => $request->category_id,
+            'subcategory_name' => $request->subcategory_name,
+            'added_by' => Auth::id(),
+            'created_at' => Carbon::now(),
+        ]);
+        return back()->with('success', 'Subcateogry Added Successfull !');
+    }
+    //subcategory delete
+
+    public function delete_subcategory($subcategory_id)
+    {
+        Subcategory::find($subcategory_id)->delete();
+        return back()->with('delete', 'Cateogry Delete Successfull !');
+    }
+
+    //edit page subcategory
+    public function update_subcategory($subcategory_id)
+    {
+        $subcategory_in = Subcategory::find($subcategory_id);
+        return view('admin.subcategory.edit', [
+            'subcategory_in' => $subcategory_in,
+        ]);
+    }
+
+
+    //edit page subcategory
+    public function edit_subcategory(Request $request)
+    {
+        $request->validate([
+            'subcategory_name' => 'required|unique:subcategories',
+        ]);
+
+        Subcategory::find($request->category_id)->update([
+            'subcategory_name' => $request->subcategory_name,
+            'updated_at' => Carbon::now(),
+        ]);
+        return redirect('/subcategory')->with('update', 'Subcateogry Delete Successfull !');
     }
 }
