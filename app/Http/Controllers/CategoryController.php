@@ -94,20 +94,24 @@ class CategoryController extends Controller
     //insert subcategory
     public function subcategory_insert(Request $request)
     {
-        $request->validate([
+        // $request->validate([
 
-            'subcategory_name' => 'required|unique:subcategories',
-            'category_id' => 'required',
-        ]);
+        //     'subcategory_name' => 'required|unique:subcategories',
+        //     'category_id' => 'required',
+        // ]);
 
 
-        Subcategory::insert([
-            'category_id' => $request->category_id,
-            'subcategory_name' => $request->subcategory_name,
-            'added_by' => Auth::id(),
-            'created_at' => Carbon::now(),
-        ]);
-        return back()->with('success', 'Subcateogry Added Successfull !');
+        if (Subcategory::where('category_id', $request->category_id)->where('subcategory_name', $request->subcategory_name)->exists()) {
+            return back()->with('warning', 'Subcateogry Name Already Exists !');
+        } else {
+            Subcategory::insert([
+                'category_id' => $request->category_id,
+                'subcategory_name' => $request->subcategory_name,
+                'added_by' => Auth::id(),
+                'created_at' => Carbon::now(),
+            ]);
+            return back()->with('success', 'Subcateogry Added Successfull !');
+        }
     }
     //subcategory delete
 
@@ -121,8 +125,10 @@ class CategoryController extends Controller
     public function update_subcategory($subcategory_id)
     {
         $subcategory_in = Subcategory::find($subcategory_id);
+        $category_in = Category::all();
         return view('admin.subcategory.edit', [
             'subcategory_in' => $subcategory_in,
+            'category_in' => $category_in,
         ]);
     }
 
@@ -130,14 +136,26 @@ class CategoryController extends Controller
     //edit page subcategory
     public function edit_subcategory(Request $request)
     {
-        $request->validate([
-            'subcategory_name' => 'required|unique:subcategories',
-        ]);
 
-        Subcategory::find($request->category_id)->update([
+
+        Subcategory::find($request->subcategory_id)->update([
+            'category_id' => $request->category_id,
             'subcategory_name' => $request->subcategory_name,
             'updated_at' => Carbon::now(),
         ]);
         return redirect('/subcategory')->with('update', 'Subcateogry Delete Successfull !');
+    }
+
+    //mark delete
+    public function category_delete_all(Request $request)
+    {
+        if ($request->mark_all_del) {
+            foreach ($request->mark_all_del as $mark_del) {
+                Category::find($mark_del)->delete();
+            }
+            return back()->with('success_del', 'Mark Delete Succesfull');
+        } else {
+            return back();
+        }
     }
 }

@@ -16,7 +16,23 @@ Smart-Office | Subcategory
 
             <form class="forms-sample " method="POST" action="{{url('/edit/subcategory')}}">
                 @csrf
-                <input type="hidden" name="category_id" value="{{$subcategory_in->id}}">
+                <input type="hidden" name="subcategory_id" value="{{$subcategory_in->id}}">
+                <div class="form-group ">
+                    <label for="exampleInputName1">Category Name <code>*</code></label>
+
+                    <select name="category_id" class="form-control text-light" id="exampleInputName1" placeholder="Name">
+                        @foreach($category_in as $category)
+                        <option value="{{$category->id}}" {{$subcategory_in->category_id==$category->id ?'selected':''}}> {{$category->category_name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group ">
+                    @error('category_id')
+                    <div class="alert alert-danger">
+                        {{$message}}
+                    </div>
+                    @enderror
+                </div>
                 <div class="form-group ">
                     <label for="exampleInputName1">Subcategory Name <code>*</code></label>
 

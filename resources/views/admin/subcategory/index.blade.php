@@ -6,7 +6,18 @@ Smart-Office|Subcategory
 @endsection
 
 @section('content')
+@if(session('warning'))
+<div class="alert alert-danger">
+    {{session('warning')}}
+</div>
+@endif
 
+
+@if(session('success'))
+<div class="alert alert-success">
+    {{session('success')}}
+</div>
+@endif
 <div class="col-lg-8 grid-margin stretch-card " style="float:left">
 
     <div class="card">
@@ -33,7 +44,7 @@ Smart-Office|Subcategory
                         <tr>
 
                             <td>{{$subcategory_info->FirstItem()+$index}}</td>
-                            {{--<td>{{App\Models\Category::find($subcategory->category_id)->category_name}}</td>--}}
+                            <td>{{App\Models\Category::find($subcategory->category_id)->category_name}}</td>
                             <td>{{$subcategory->subcategory_name}}</td>
                             <td>{{App\Models\User::find($subcategory->added_by)->name}}</td>
                             <td>{{$subcategory->created_at->diffForHumans()}}</td>
@@ -119,7 +130,7 @@ Smart-Office|Subcategory
 @endsection
 
 
-@section('footer_script')
+{{--@section('footer_script')
 @if(session('success'))
 <script>
     Swal.fire({
@@ -159,4 +170,4 @@ Smart-Office|Subcategory
     })
 </script>
 @endif
-@endsection
+@endsection--}}

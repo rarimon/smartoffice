@@ -6,6 +6,12 @@ Smart-Office|Category
 @endsection
 
 @section('content')
+@if(session('success_del'))
+<div class="alert alert-success">
+    {{session('success_del')}}
+</div>
+
+@endif
 
 <div class="col-lg-8 grid-margin stretch-card " style="float:left">
 
@@ -16,48 +22,56 @@ Smart-Office|Category
             <h4 class="card-title text-center">Category List</h4>
 
             <div class="table-responsive">
-                <table class="table table-striped text-light">
-                    <thead class="text-center">
+                <form action="{{url('/category/delete_all')}}" method="post">
+                    @csrf
 
-                        <tr>
-                            <th>No</th>
-                            <th>Category Name</th>
-                            <th>Added By</th>
-                            <th>Creat Time</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($category_info as $index=> $category)
-                        <tr>
-                            <td>{{$category_info->FirstItem()+$index}}</td>
-                            <td>{{$category->category_name}}</td>
-                            <td>{{App\Models\User::find($category->added_by)->name}}</td>
-                            <td>{{$category->created_at->diffForHumans()}}</td>
-                            <td>
-                                <div class="template-demo">
+                    <table class="table table-striped text-light">
+                        <thead class="text-center">
 
-                                    <a href="{{url('/update/category')}}/{{$category->id}}" class="btn btn-outline-secondary btn-icon-text"> Edit
-                                    </a>
-                                    <a href="{{url('/category/delete')}}/{{$category->id}}" class="btn btn-outline-danger btn-icon-text">
-                                        Delete</a>
+                            <tr>
+                                <th><input type="checkbox" id="mark_del"> Check All</th>
+                                <th>No</th>
+                                <th>Category Name</th>
+                                <th>Added By</th>
+                                <th>Creat Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($category_info as $index=> $category)
+                            <tr>
+                                <td><input type="checkbox" name="mark_all_del[]" value="{{$category->id}}"></td>
+                                <td>{{$category_info->FirstItem()+$index}}</td>
+                                <td>{{$category->category_name}}</td>
+                                <td>{{App\Models\User::find($category->added_by)->name}}</td>
+                                <td>{{$category->created_at->diffForHumans()}}</td>
+                                <td>
+                                    <div class="template-demo">
 
-                                </div>
+                                        <a href="{{url('/update/category')}}/{{$category->id}}" class="btn btn-outline-secondary btn-icon-text"> Edit
+                                        </a>
+                                        <a href="{{url('/category/delete')}}/{{$category->id}}" class="btn btn-outline-danger btn-icon-text">
+                                            Delete</a>
 
-                            </td>
-                        </tr>
+                                    </div>
 
-                        @endforeach
+                                </td>
+                            </tr>
 
-
-
-                    </tbody>
-                </table>
-
-                {{$category_info->links()}}
+                            @endforeach
 
 
 
+                        </tbody>
+                    </table>
+
+
+                    {{$category_info->links()}}
+
+
+                    <button type="submit" class="btn btn-success mr-2">Delete All</button>
+
+                </form>
             </div>
         </div>
     </div>
@@ -140,4 +154,13 @@ Smart-Office|Category
     })
 </script>
 @endif
+
+<script>
+    $("#mark_del").click(function() {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+</script>
+
+
+
 @endsection
